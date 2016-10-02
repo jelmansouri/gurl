@@ -1,3 +1,9 @@
 [submodule "base"]
 	path = base
 	url = git@github.com:jelmansouri/chromium-base.git
+[submodule "testing/gtest"]
+	path = testing/gtest
+	url = git@github.com:jelmansouri/chromium-gtest.git
+[submodule "testing/gmock"]
+	path = testing/gmock
+	url = git@github.com:jelmansouri/chromium-gmock.git
