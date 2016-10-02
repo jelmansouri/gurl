@@ -4,17 +4,25 @@ project "base"
     language "C++"
     targetdir "output/bin/%{cfg.buildcfg}"
 
-    files { "base/**.h", "base/**.cc" }
-    excludes { "**unitest.cc", "**unitest.cc", "third_party/**" }
-    files { "third_party/google/**.cc" }
-    
-    filter "files:**posix.cc"
-        flags {"ExcludeFromBuild"}
+    -- The library's public headers
+    includedirs { "./" }
 
-    filter "files:**mac.cc"
-        flags {"ExcludeFromBuild"}
-    
     useGTestLib()
+    useGmockLib()
+
+    files { "base/**.h", "base/**.cc" }
+    excludes { "base/test/**", "base/**unittest.cc", "base/third_party/**" }
+
+    filterSystemFiles()
+    
+function useBaseLib()
+    -- The library's public headers
+    includedirs { "./" }
+
+    -- We link against a library that's in the same workspace, so we can just
+    -- use the project name - premake is really smart and will handle everything for us.
+    links "base"
+end
 
 project "base_test"
     kind "ConsoleApp"
@@ -22,12 +30,14 @@ project "base_test"
     language "C++"
     targetdir "output/bin/%{cfg.buildcfg}"
 
-    files { "base/**unitest.h", "base/**unitest.cc" }
-    
-    filter "files:**posix_unitest.cc"
-        flags {"ExcludeFromBuild"}
+    -- The library's public headers
+    includedirs { "./" }
 
-    filter "files:**posix_mac.cc"
-        flags {"ExcludeFromBuild"}
+    useGTestLib()
+    useGmockLib()
+
+    files { "base/**unittest.h", "base/**unittest.cc" }
+    
+    filterSystemFiles()
 
     links "base"

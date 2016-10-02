@@ -14,7 +14,7 @@ project "gtest"
     excludes { "testing/gtest/src/gtest_main.cc" }
 
     filter "files:testing/gtest/src/gtest-all.cc"
-        flags {"ExcludeFromBuild"}
+        flags { "ExcludeFromBuild" }
 
 
 function useGTestLib()

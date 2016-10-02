@@ -16,7 +16,7 @@ project "gmock"
     excludes { "testing/gmock/src/gmock_main.cc" }
 
     filter "files:testing/gmock/src/gmock-all.cc"
-        flags {"ExcludeFromBuild"}
+        flags { "ExcludeFromBuild" }
 
 
 function useGmockLib()
