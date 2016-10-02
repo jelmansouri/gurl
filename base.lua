@@ -13,14 +13,8 @@ project "base"
 
     filter "files:**mac.cc"
         flags {"ExcludeFromBuild"}
-
-    filter "configurations:Debug"
-        defines { "DEBUG" }
-        flags { "Symbols" }
-
-    filter "configurations:Release"
-        defines { "NDEBUG" }
-        optimize "On"
+    
+    useGTestLib()
 
 project "base_test"
     kind "ConsoleApp"
@@ -35,13 +29,5 @@ project "base_test"
 
     filter "files:**posix_mac.cc"
         flags {"ExcludeFromBuild"}
-
-    filter "configurations:Debug"
-        defines { "DEBUG" }
-        flags { "Symbols" }
-
-    filter "configurations:Release"
-        defines { "NDEBUG" }
-        optimize "On"
 
     links "base"
