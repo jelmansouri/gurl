@@ -16,23 +16,16 @@ project "base"
     useGTestLib()
     useGmockLib()
 
-    files { "base/**.h", "base/**.cc" }
+    files { "base/**.h", "base/**.cc", "base/**.c", "base/**.cpp" }
     
     excludes { 
         "base/test/**", 
-        "base/**unittest.cc", 
-        "base/third_party/**",
+        "base/**unittest.cc",
         "base/profiler/test_support_library.cc",
         "base/allocator/unittest_utils.cc",
         "base/check_example.cc",
-        "base/i18n/build_utf8_validator_tables.cc"
-    }
-
-    files {
-        "base/third_party/dmg_fp/**.h", "base/third_party/dmg_fp/**.cc",
-        "base/third_party/icu/**.h", "base/third_party/icu/**.cc",
-        "base/third_party/nspr/**.h", "base/third_party/nspr/**.cc",
-        "base/third_party/superfasthash/**.h", "base/third_party/superfasthash/**.c"
+        "base/i18n/build_utf8_validator_tables.cc",
+        "base/third_party/dmg_fp/dtoa.cc"
     }
 
     filterSystemFiles()
@@ -40,13 +33,16 @@ project "base"
     filter {
         "system:windows", 
         "files:base/strings/string16.cc or " ..
-        "files:base/message_loop/message_pump_libevent or " ..
+        "files:base/message_loop/message_pump_libevent.cc or " ..
         "files:base/allocator/allocator_shim*.cc or " ..
         "files:base/allocator/winheap_stubs_win.cc or " ..
         "files:base/allocator/debugallocation_shim.cc or " ..
         "files:base/process/memory_stubs.cc or " ..
         "files:base/i18n/icu_util_nacl_win64.cc or " ..
-        "files:base/files/file_path_watcher_stub.cc"
+        "files:base/files/file_path_watcher_stub.cc or " ..
+        "files:base/third_party/libevent/** or " ..
+        "files:base/third_party/symbolize/** or " ..
+        "files:base/third_party/xdg_mime/**"
     } 
         flags { "ExcludeFromBuild" }
 
