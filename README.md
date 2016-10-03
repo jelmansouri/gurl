@@ -1,8 +1,11 @@
-# gurl
-gURL
+# gURL
+gURL is a chromium subset represeting everything necessary to perform requets using different protocols 
 
+### chromium base info
+For all files that do not have a propper individual mirror, we try to synch all files to the same base chromium commit
+03c7e50720e3a9e79cc2b443269b8327bbe52475
 
-## Manual changes
+### Manual changes
 generated manually :
 base/win/base_features.h 
 base/allocator/features.h
