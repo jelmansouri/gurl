@@ -16,7 +16,7 @@ project "base"
     useGTestLib()
     useGmockLib()
 
-    files { "base/**.h", "base/**.cc", "base/**.c", "base/**.cpp" }
+    files { "base/**.h", "base/**.cc", "base/**.cpp", "base/**.c" }
     
     excludes { 
         "base/test/**", 
