@@ -1,3 +1,5 @@
+-- gtest.lua, projects:gtest, gtest_unittest
+
 project "gtest"
     -- kind is used to indicate the type of this project.
     kind "StaticLib"
@@ -26,11 +28,26 @@ function useGTestLib()
     links "gtest"
 end
 
-project "gtest_test"
+project "gtest_main"
+    -- kind is used to indicate the type of this project.
+    kind "StaticLib"
+
+    -- We set the location of the files Premake will generate
+    location "output/gtest"
+    language "C++"
+    targetdir "output/bin/%{cfg.buildcfg}"
+
+    useGTestLib()
+
+    files {
+		"testing/gtest/src/gtest_main.cc"
+    }
+
+project "gtest_unittest"
     kind "ConsoleApp"
     location "output/gtest"
     language "C++"
-    targetname ("gtest_all_test")
+    targetname "gtest_all_test"
     targetdir "output/bin/%{cfg.buildcfg}"
 
     -- The library's public headers

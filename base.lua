@@ -4,7 +4,8 @@ project "base"
     language "C++"
     targetdir "output/bin/%{cfg.buildcfg}"
     exceptionhandling "Off"
-
+    rtti "Off"
+    
     -- The library's public headers
     includedirs { 
         ".", 

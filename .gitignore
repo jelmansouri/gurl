@@ -3,3 +3,5 @@ output/
 
 #ides folders and files
 .vscode/
+
+premake5.exe

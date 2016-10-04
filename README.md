@@ -1,9 +1,18 @@
 # gURL
-gURL is a chromium subset represeting everything necessary to perform requets using different protocols 
+gURL is a chromium subset represeting everything necessary to perform requets using different protocols.
+Right now only winddows is supported
+Note that the project makes heavy use of git submodules so to clone don't forget to add --recursive as a git clone argument 
 
-### chromium base info
+### Dependecies
+To be able to build you need to download premake5 from https://premake.github.io/ add the executable to something accessible from your path or add it to the root directory 
+
+### Chromium base commit
+gURL tries to chromium components mirrors as much as possible to levrage directly the developpement done within chromium master branch
 For all files that do not have a propper individual mirror, we try to synch all files to the same base chromium commit
 03c7e50720e3a9e79cc2b443269b8327bbe52475
+
+### TODO
+put ICU as an optional dependency 
 
 ### Manual changes
 generated manually :

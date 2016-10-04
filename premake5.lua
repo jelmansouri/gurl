@@ -1,5 +1,8 @@
 -- premake5.lua
 
+--inlcude "utils.lua"
+include "options.lua"
+
 workspace "gurl"
 
     -- We set the location of the files Premake will generate
@@ -81,6 +84,8 @@ function filterSystemFiles()
         flags { "ExcludeFromBuild" }
 end
 
+
 include "gtest.lua"
 include "gmock.lua"
 include "base.lua"
+include "third_party.lua"
