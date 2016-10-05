@@ -40,6 +40,14 @@ project "icu"
         -- todo(jelmansouri) support this case
     end
 
+    function useIcuLib()
+        includedirs { 
+            "third_party/icu/source/i18n",
+            "third_party/icu/source/common"
+        }
+        links "icu"
+    end
+
    -- Carefull here we changed the to the workspace scope 
     project "*"
         defines {
@@ -93,6 +101,28 @@ project "ced"
 
         -- Reset filters
         filter {}
+
+    function useCedLib()
+        includedirs { "third_party/ced/src" }
+        links "ced"
+    end
+
+project "ced_unittest"
+    kind "ConsoleApp"
+    location "output/third_party/ced"
+    language "C++"
+    targetdir "output/bin/%{cfg.buildcfg}"
+    exceptionhandling "Off"
+    rtti "Off"
+
+    useCedLib()
+    useGTestLib()
+    useGTestMain()
+
+    files {
+        "third_party/ced/src/**unittest.h", 
+        "third_party/ced/src/**unittest.cc",
+    }
 
 project "modp_b64"
     kind "StaticLib"

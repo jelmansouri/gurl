@@ -8,6 +8,7 @@ project "gtest"
     location "output/gtest"
     language "C++"
     targetdir "output/bin/%{cfg.buildcfg}"
+    rtti "Off"
 
     -- The library's public headers
     includedirs { "testing/gtest/include", "testing/gtest" }
@@ -17,16 +18,21 @@ project "gtest"
 
     filter "files:testing/gtest/src/gtest-all.cc"
         flags { "ExcludeFromBuild" }
+    
+    function addGTestDefines()
+        filter "action:vs201*"
+            defines { 
+                "GTEST_USE_OWN_TR1_TUPLE=0",
+            }
+    end
+    
+    addGTestDefines()
 
-
-function useGTestLib()
-    -- The library's public headers
-    includedirs { "testing/gtest/include" }
-
-    -- We link against a library that's in the same workspace, so we can just
-    -- use the project name - premake is really smart and will handle everything for us.
-    links "gtest"
-end
+    function useGTestLib()
+        addGTestDefines()
+        includedirs { "testing/gtest/include" }
+        links "gtest"
+    end
 
 project "gtest_main"
     -- kind is used to indicate the type of this project.
@@ -36,6 +42,7 @@ project "gtest_main"
     location "output/gtest"
     language "C++"
     targetdir "output/bin/%{cfg.buildcfg}"
+    rtti "Off"
 
     useGTestLib()
 
@@ -43,24 +50,29 @@ project "gtest_main"
 		"testing/gtest/src/gtest_main.cc"
     }
 
+    function useGTestMain()
+        links "gtest_main"
+    end
+
 project "gtest_unittest"
     kind "ConsoleApp"
     location "output/gtest"
     language "C++"
     targetname "gtest_all_test"
     targetdir "output/bin/%{cfg.buildcfg}"
-
+    rtti "Off"
+    
     -- The library's public headers
     includedirs { "testing/gtest" }
 
     filter "action:vs201*"
-        defines { 
-            "GTEST_USE_OWN_TR1_TUPLE=0",
+        defines {
             "_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS"
         }
         buildoptions { "/bigobj" }
 
     useGTestLib()
+    useGTestMain()
 
     files {
         "testing/gtest/test/**.h",
@@ -76,5 +88,4 @@ project "gtest_unittest"
         "testing/gtest/test/gtest-typed-test2_test.cc",
         "testing/gtest/test/gtest_unittest.cc",
         "testing/gtest/test/production.cc",
-		"testing/gtest/src/gtest_main.cc"
     }

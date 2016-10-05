@@ -5,17 +5,17 @@ project "base"
     targetdir "output/bin/%{cfg.buildcfg}"
     exceptionhandling "Off"
     rtti "Off"
-    
+
     -- The library's public headers
     includedirs { 
-        ".", 
-        "third_party/icu/source/i18n",
-        "third_party/icu/source/common",
-        "third_party/ced/src"
+        "."
     }
 
     useGTestLib()
     useGmockLib()
+    
+    useCedLib()
+    useIcuLib()
 
     files { "base/**.h", "base/**.cc", "base/**.cpp", "base/**.c" }
     
@@ -58,17 +58,17 @@ project "base"
         "files:base/files/file_path_watcher_fsevents.cc or files:base/files/file_path_watcher_kqueue.cc"
     } 
         flags { "ExcludeFromBuild" }
-    
-function useBaseLib()
-    -- The library's public headers
-    includedirs { "./" }
+        
+    function useBaseLib()
+        -- The library's public headers
+        includedirs { "./" }
 
-    -- We link against a library that's in the same workspace, so we can just
-    -- use the project name - premake is really smart and will handle everything for us.
-    links "base"
-end
+        -- We link against a library that's in the same workspace, so we can just
+        -- use the project name - premake is really smart and will handle everything for us.
+        links "base"
+    end
 
-project "base_test"
+project "base_unittest"
     kind "ConsoleApp"
     location "output/base"
     language "C++"

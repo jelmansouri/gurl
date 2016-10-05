@@ -87,5 +87,6 @@ end
 
 include "gtest.lua"
 include "gmock.lua"
-include "base.lua"
 include "third_party.lua"
+include "base.lua"
+

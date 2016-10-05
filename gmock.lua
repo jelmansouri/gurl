@@ -19,16 +19,12 @@ project "gmock"
         flags { "ExcludeFromBuild" }
 
 
-function useGmockLib()
-    -- The library's public headers
-    includedirs { "testing/gmock/include" }
+    function useGmockLib()
+        includedirs { "testing/gmock/include" }
+        links "gmock"
+    end
 
-    -- We link against a library that's in the same workspace, so we can just
-    -- use the project name - premake is really smart and will handle everything for us.
-    links "gmock"
-end
-
-project "gmock_test"
+project "gmock_unittest"
     kind "ConsoleApp"
     location "output/gmock"
     language "C++"
