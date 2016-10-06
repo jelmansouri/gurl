@@ -18,9 +18,14 @@ project "gmock"
     filter "files:testing/gmock/src/gmock-all.cc"
         flags { "ExcludeFromBuild" }
 
+    function addGMockDefinesAndIncludes()
+        filter {}
+        addGTestDefinesAndIncludes()
+        includedirs { "testing/gmock/include" }
+    end
 
     function useGmockLib()
-        includedirs { "testing/gmock/include" }
+        addGMockDefinesAndIncludes()
         links "gmock"
     end
 

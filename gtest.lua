@@ -11,7 +11,7 @@ project "gtest"
     rtti "Off"
 
     -- The library's public headers
-    includedirs { "testing/gtest/include", "testing/gtest" }
+    includedirs { "testing/gtest" }
 
     files { "testing/gtest/include/gtest/**.h", "testing/gtest/src/**.cc" }
     excludes { "testing/gtest/src/gtest_main.cc" }
@@ -19,18 +19,20 @@ project "gtest"
     filter "files:testing/gtest/src/gtest-all.cc"
         flags { "ExcludeFromBuild" }
     
-    function addGTestDefines()
+    function addGTestDefinesAndIncludes()
         filter "action:vs201*"
             defines { 
                 "GTEST_USE_OWN_TR1_TUPLE=0",
             }
+        filter {}
+
+        includedirs { "testing/gtest/include" }
     end
     
-    addGTestDefines()
+    addGTestDefinesAndIncludes()
 
     function useGTestLib()
-        addGTestDefines()
-        includedirs { "testing/gtest/include" }
+        addGTestDefinesAndIncludes()
         links "gtest"
     end
 
@@ -61,7 +63,7 @@ project "gtest_unittest"
     targetname "gtest_all_test"
     targetdir "output/bin/%{cfg.buildcfg}"
     rtti "Off"
-    
+
     -- The library's public headers
     includedirs { "testing/gtest" }
 

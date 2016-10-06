@@ -21,6 +21,17 @@ project "icu"
         "third_party/icu/source/common/**.c",
     }
 
+    defines {
+        "U_COMMON_IMPLEMENTATION",
+        "U_I18N_IMPLEMENTATION",
+        "HAVE_DLOPEN=0",
+        -- Only build encoding coverters and detectors necessary for HTML5.
+        "UCONFIG_ONLY_HTML_CONVERSION=1",
+        -- No dependency on the default platform encoding.
+        -- Will cut down the code size.
+        "U_CHARSET_IS_UTF8=1",
+    }
+
     filter { "system:windows" }
         disablewarnings {
             "4005", -- Macro redefinition.
@@ -40,23 +51,12 @@ project "icu"
         -- todo(jelmansouri) support this case
     end
 
-    function useIcuLib()
-        includedirs { 
-            "third_party/icu/source/i18n",
-            "third_party/icu/source/common"
-        }
-        links "icu"
-    end
-
-   -- Carefull here we changed the to the workspace scope 
-    project "*"
+    function addIcuDefinesAndIncludes()
         defines {
+            "U_STATIC_IMPLEMENTATION",
             "U_USING_ICU_NAMESPACE=0",
             "U_ENABLE_DYLOAD=0",
             "U_NOEXCEPT=",
-            "U_STATIC_IMPLEMENTATION",
-            "U_COMMON_IMPLEMENTATION",
-            "U_I18N_IMPLEMENTATION"
         }
         filter { "system:windows or options:icu-use-data-file" }
             defines { "U_ICUDATAENTRY_IN_COMMON"}
@@ -70,6 +70,18 @@ project "icu"
         -- Reset filters
         filter {}
 
+        includedirs { 
+            "third_party/icu/source/i18n",
+            "third_party/icu/source/common"
+        }
+    end
+
+    addIcuDefinesAndIncludes()
+
+    function useIcuLib()
+        addIcuDefinesAndIncludes()
+        links "icu"
+    end
 
 project "ced"
     kind "StaticLib"
@@ -89,21 +101,29 @@ project "ced"
     }
     excludes {  
         "third_party/ced/src/**unittest.cc",
-    }
+    }   
 
-    -- Carefull here we changed the to the workspace scope 
-    project "*"
-        filter { "system:windows" }
-            defines { "COMPILER_MSVC"}
+    filter { "system:windows" }
+        defines { "COMPILER_MSVC"}
+        disablewarnings {
+            "4005", -- Macro redefinition.
+            "4006", -- #undef expected an identifier.
+            "4018", -- '<': signed/unsigned mismatch
+            "4309", -- Truncation of constant value.
+        }
         
-        filter { "system:not windows" }
-            defines { "COMPILER_GCC"}
+    filter { "system:not windows" }
+        defines { "COMPILER_GCC"}
 
-        -- Reset filters
+    function addCedDefinesAndIncludes()
         filter {}
+        includedirs { "third_party/ced/src" }
+    end
+
+    addCedDefinesAndIncludes()
 
     function useCedLib()
-        includedirs { "third_party/ced/src" }
+        addCedDefinesAndIncludes()
         links "ced"
     end
 
@@ -123,6 +143,16 @@ project "ced_unittest"
         "third_party/ced/src/**unittest.h", 
         "third_party/ced/src/**unittest.cc",
     }
+
+    filter { "system:windows" }
+        defines { "COMPILER_MSVC"}
+        disablewarnings {
+            "4310", -- Truncation of constant value.
+            "4267", -- size_t -> int
+        }
+
+    filter { "system:not windows" }
+        defines { "COMPILER_GCC"}
 
 project "modp_b64"
     kind "StaticLib"
@@ -144,3 +174,8 @@ project "modp_b64"
     excludes {  
         "third_party/modp_b64/**unittest.cc",
     }
+
+    function useModp_b64Lib()
+        filter {}
+        links "modp_b64"
+    end

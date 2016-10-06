@@ -6,18 +6,16 @@ project "base"
     exceptionhandling "Off"
     rtti "Off"
 
-    -- The library's public headers
-    includedirs { 
-        "."
-    }
+    includedirs { "." }
 
     useGTestLib()
     useGmockLib()
     
     useCedLib()
     useIcuLib()
+    useModp_b64Lib()
 
-    files { "base/**.h", "base/**.cc", "base/**.cpp", "base/**.c" }
+    files { "base/**.h", "base/**.cc", "base/**.cpp", "base/**.c", "base/**.mm" }
     
     excludes { 
         "base/test/**", 
@@ -29,7 +27,12 @@ project "base"
         "base/third_party/dmg_fp/dtoa.cc"
     }
 
-    filterSystemFiles()
+    defines {
+        "BASE_IMPLEMENTATION",
+        "BASE_I18N_IMPLEMENTATION"
+    }
+
+    excludeSysFilesFromBuild()
 
     filter {
         "system:windows", 
@@ -61,8 +64,8 @@ project "base"
         
     function useBaseLib()
         -- The library's public headers
+        addIcuDefinesAndIncludes()
         includedirs { "./" }
-
         -- We link against a library that's in the same workspace, so we can just
         -- use the project name - premake is really smart and will handle everything for us.
         links "base"
@@ -79,9 +82,8 @@ project "base_unittest"
 
     useGTestLib()
     useGmockLib()
+    useBaseLib()
 
     files { "base/**unittest.h", "base/**unittest.cc" }
     
-    filterSystemFiles()
-
-    links "base"
+    excludeSysFilesFromBuild()
