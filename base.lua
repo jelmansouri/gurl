@@ -82,15 +82,16 @@ project "base_unittest"
 
     useGTestLib()
     useGmockLib()
+    useGTestMain()
     useBaseLib()
 
     files { "base/**unittest.h", "base/**unittest.cc" }
-    
+
+    excludeSysFilesFromBuild()
+
     filter {
         "system:windows",
-        "files:base/message_loop/message_pump_libevent_unittest.cc",
+        "files:base/message_loop/message_pump_libevent_unittest.cc or " ..
         "files:base/message_loop/message_pump_glib_unittest.cc",
     } 
         flags { "ExcludeFromBuild" }
-
-    excludeSysFilesFromBuild()
