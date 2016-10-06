@@ -13,19 +13,24 @@ project "gtest"
     -- The library's public headers
     includedirs { "testing/gtest" }
 
-    files { "testing/gtest/include/gtest/**.h", "testing/gtest/src/**.cc" }
+    files { 
+        "testing/gtest/include/gtest/**.h", 
+        "testing/gtest/src/**.cc",
+        "testing/multiprocess_func_list.cc",
+        "testing/multiprocess_func_list.h",
+    }
     excludes { "testing/gtest/src/gtest_main.cc" }
 
     filter "files:testing/gtest/src/gtest-all.cc"
         flags { "ExcludeFromBuild" }
     
     function addGTestDefinesAndIncludes()
-        filter "action:vs201*"
-            defines { 
-                "GTEST_USE_OWN_TR1_TUPLE=0",
-            }
         filter {}
-
+        defines {
+            "GTEST_HAS_POSIX_RE=0",
+            "GTEST_LANG_CXX11=1",
+            "UNIT_TEST",
+        }
         includedirs { "testing/gtest/include" }
     end
     

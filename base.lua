@@ -86,4 +86,11 @@ project "base_unittest"
 
     files { "base/**unittest.h", "base/**unittest.cc" }
     
+    filter {
+        "system:windows",
+        "files:base/message_loop/message_pump_libevent_unittest.cc",
+        "files:base/message_loop/message_pump_glib_unittest.cc",
+    } 
+        flags { "ExcludeFromBuild" }
+
     excludeSysFilesFromBuild()
