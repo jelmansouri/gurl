@@ -3,8 +3,8 @@ project "icu"
     location "output/third_party/icu"
     language "C++"
     targetdir "output/bin/%{cfg.buildcfg}"
-    exceptionhandling "Off"
     rtti "On"
+    noExceptions()
 
     -- The library's public headers
     includedirs { 
@@ -52,6 +52,7 @@ project "icu"
     end
 
     function addIcuDefinesAndIncludes()
+        filter { }
         defines {
             "U_STATIC_IMPLEMENTATION",
             "U_USING_ICU_NAMESPACE=0",
@@ -68,7 +69,7 @@ project "icu"
         filter { "options:not icu-use-data-file", "system:not windows" }
             defines { "ICU_UTIL_DATA_IMPL=ICU_UTIL_DATA_STATIC" }
         -- Reset filters
-        filter {}
+        filter { }
 
         includedirs { 
             "third_party/icu/source/i18n",
@@ -88,8 +89,8 @@ project "ced"
     location "output/third_party/ced"
     language "C++"
     targetdir "output/bin/%{cfg.buildcfg}"
-    exceptionhandling "Off"
     rtti "Off"
+    noExceptions()
 
     includedirs { "third_party/ced/src" }
 
@@ -110,6 +111,11 @@ project "ced"
             "4006", -- #undef expected an identifier.
             "4018", -- '<': signed/unsigned mismatch
             "4309", -- Truncation of constant value.
+            "4838", -- Conversion from 'int' to 'char' requires a narrowing conversion
+            "4267", -- conversion from 'size_t' to 'unsigned int', possible loss of data
+            "4244", -- conversion from '__int64' to 'int', possible loss of data
+            "4996", --  This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+
         }
         
     filter { "system:not windows" }
@@ -129,11 +135,11 @@ project "ced"
 
 project "ced_unittest"
     kind "ConsoleApp"
-    location "output/third_party/ced"
+    location "output/third_party/ced_unittest"
     language "C++"
     targetdir "output/bin/%{cfg.buildcfg}"
-    exceptionhandling "Off"
     rtti "Off"
+    noExceptions()
 
     useCedLib()
     useGTestLib()
@@ -159,8 +165,8 @@ project "modp_b64"
     location "output/third_party/modp_b64"
     language "C++"
     targetdir "output/bin/%{cfg.buildcfg}"
-    exceptionhandling "Off"
     rtti "Off"
+    noExceptions()
 
     includedirs {
         ".", 

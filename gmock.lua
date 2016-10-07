@@ -31,7 +31,7 @@ project "gmock"
 
 project "gmock_unittest"
     kind "ConsoleApp"
-    location "output/gmock"
+    location "output/gmock_unittest"
     language "C++"
     targetdir "output/bin/%{cfg.buildcfg}"
 

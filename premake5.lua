@@ -24,7 +24,8 @@ workspace "gurl"
         -- We want debug symbols in our debug config
         flags { "Symbols" }
         defines { 
-            "DEBUG"
+            "DEBUG",
+            "_DEBUG"
         }
 
     -- We now only set settings for Release
@@ -34,20 +35,6 @@ workspace "gurl"
         defines { 
             "NDEBUG",
         }
-    
-    filter { "system:windows" }
-        defines {
-            "NOMINMAX", 
-            "_CRT_RAND_S",
-            "WIN32_LEAN_AND_MEAN",
-            -- _HAS_EXCEPTIONS must match ExceptionHandling in msvs_settings.
-            "_HAS_EXCEPTIONS=0",
-            -- Silence some warnings; we can't switch the the 'recommended'
-            -- versions as they're not available on old OSs.
-            "_WINSOCK_DEPRECATED_NO_WARNINGS",
-            "NO_TCMALLOC",
-        }
-        disablewarnings { "4244" }
 
     -- Reset the filter for other settings
     filter { }

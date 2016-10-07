@@ -46,7 +46,7 @@ project "gtest_main"
     kind "StaticLib"
 
     -- We set the location of the files Premake will generate
-    location "output/gtest"
+    location "output/gtest_main"
     language "C++"
     targetdir "output/bin/%{cfg.buildcfg}"
     rtti "Off"
@@ -63,7 +63,7 @@ project "gtest_main"
 
 project "gtest_unittest"
     kind "ConsoleApp"
-    location "output/gtest"
+    location "output/gtest_unittest"
     language "C++"
     targetname "gtest_all_test"
     targetdir "output/bin/%{cfg.buildcfg}"
