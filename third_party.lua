@@ -185,3 +185,100 @@ project "modp_b64"
         filter {}
         links "modp_b64"
     end
+
+project "zlib"
+    kind "StaticLib"
+    location "output/third_party/zlib"
+    language "C++"
+    targetdir "output/bin/%{cfg.buildcfg}"
+    rtti "Off"
+    noExceptions()
+
+    includedirs {
+        "third_party/zlib"
+    }
+
+    files {
+        "third_party/zlib/*.h", 
+        "third_party/zlib/*.c",
+    }
+
+    excludeSysFilesFromBuild()
+
+    function addZlibDefinesAndIncludes()
+        filter { }
+        includedirs { 
+            "third_party/zlib",
+        }
+    end
+
+    function useZlib()
+        addZlibDefinesAndIncludes()
+        filter {}
+        links "zlib"
+    end
+
+project "libxml"
+    kind "StaticLib"
+    location "output/third_party/libxml"
+    language "C++"
+    targetdir "output/bin/%{cfg.buildcfg}"
+    rtti "Off"
+    noExceptions()
+
+    useIcuLib()
+    useZlib()
+
+    includedirs {
+        "third_party/libxml/win32",
+    }
+
+    files {
+        "third_party/libxml/**.h", 
+        "third_party/libxml/**.c",
+        "third_party/libxml/**.cc",
+    }
+    excludes {
+        "third_party/libxml/src/test*",
+        "third_party/libxml/src/run*",  
+        "third_party/libxml/src/trio*",
+        "third_party/libxml/src/xzlib.c",
+    }
+
+    filter { 
+        "system:not macosx",
+        "files:third_party/libxml/src/macos/**.c"
+    } 
+        flags { "ExcludeFromBuild" }
+
+    filter { "system:macosx or system:ios or system:android" }
+        defines { "_REENTRANT" }
+    
+    filter { "system:windows" }
+        disablewarnings {
+            "4244", -- Conversion from '__int64' to 'int', possible loss of data
+            "4996", -- This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+            "4267", -- Conversion from 'size_t' to 'int', possible loss of data
+            "4312", -- 'type cast': conversion from 'long' to 'void *' of greater size
+            "4311", -- type cast': pointer truncation from 'void *' to 'long'
+            "4018", -- Signed/unsigned mismatch in comparison.
+            "4005", -- Macro redefinition
+        }
+
+    function addLibxmlDefinesAndIncludes()
+        filter { }
+        includedirs { 
+            "third_party/libxml/src/include",
+            "third_party/libxml/win32/include",
+        }
+        defines { "LIBXML_STATIC" }
+    end
+        addLibxmlDefinesAndIncludes()
+
+    function useLibxml2()
+        addZlibDefinesAndIncludes()
+        addLibxmlDefinesAndIncludes()
+        addIcuDefinesAndIncludes()
+        filter {}
+        links "libxml"
+    end

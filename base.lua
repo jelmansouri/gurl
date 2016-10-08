@@ -118,6 +118,7 @@ gurlProject("base_test", "StaticLib")
     useGTestLib()
     useGmockLib()
     useBaseLib()
+    useLibxml2()
 
     files {
         "base/test/**.h",
@@ -137,7 +138,6 @@ gurlProject("base_test", "StaticLib")
     excludeSysFilesFromBuild()
     
     filter { 
-        "files:base/test/gtest_xml_util.cc or " ..
         "files:base/test/run_all_base_unittests.cc or " ..
         "files:base/test/run_all_unittests.cc or " ..
         "files:base/test/run_all_perftests.cc"
@@ -160,7 +160,7 @@ gurlProject("base_unittest", "ConsoleApp")
     files {
         "base/**unittest.h",
         "base/**unittest.cc",
-        "base/allocator/unittest_utils.cc",
+        --"base/allocator/unittest_utils.cc",
         "base/test/run_all_unittests.cc",
     }
 
@@ -185,6 +185,37 @@ gurlProject("base_unittest", "ConsoleApp")
     } 
         flags { "ExcludeFromBuild" }
 
+    excludeSysFilesFromBuild()
+
+    links {
+        "cfgmgr32",
+        "powrprof",
+        "setupapi",
+        "userenv",
+        "winmm",
+        "advapi32",
+        "comdlg32",
+        "dbghelp",
+        "delayimp",
+        "dnsapi",
+        "gdi32",
+        "kernel32",
+        "msimg32",
+        "ole32",
+        "oleaut32",
+        "psapi",
+        "shell32",
+        "shlwapi",
+        "user32",
+        "usp10",
+        "uuid",
+        "version",
+        "wininet",
+        "winmm",
+        "winspool",
+        "ws2_32",
+    }
+
 gurlProject("base_perftest", "ConsoleApp")
     useGTestLib()
     useGmockLib()
@@ -196,6 +227,8 @@ gurlProject("base_perftest", "ConsoleApp")
         "base/**perftest.cc",
         "base/test/run_all_perftests.cc",
     }
+
+    excludeSysFilesFromBuild()
 
     links {
         "cfgmgr32",

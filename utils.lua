@@ -80,6 +80,8 @@ function excludeSysFilesFromBuild()
         "files:**_nacl*.c* or files:**/nacl/**"
     } 
         flags { "ExcludeFromBuild" }
+    
+    filter { }
 end
 
 function noExceptions()
