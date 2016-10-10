@@ -43,10 +43,12 @@ project "icu"
     filter { "system:windows or options:icu-use-data-file" }
         files { "third_party/icu/source/stubdata/stubdata.c" }
 
-    if not _OPTIONS["icu-use-data-file"] then
-        os.copyfile("third_party/icu/common/icudtl.dat", "output/bin/%{cfg.buildcfg}/icudtl.dat")
+    if _OPTIONS["icu-use-data-file"] then
+        os.copyfile("third_party/icu/common/icudtl.dat", "output/bin/Debug/icudtl.dat")
+        os.copyfile("third_party/icu/common/icudtl.dat", "output/bin/Release/icudtl.dat")
     elseif _OS == "windows" then
-        os.copyfile("third_party/icu/windows/icudt.dll", "output/bin/%{cfg.buildcfg}/icudt.dll")
+        os.copyfile("third_party/icu/windows/icudt.dll", "output/bin/Debug/icudt.dll")
+        os.copyfile("third_party/icu/windows/icudt.dll", "output/bin/Release/icudt.dll")
     else
         -- todo(jelmansouri) support this case
     end

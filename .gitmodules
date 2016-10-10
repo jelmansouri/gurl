@@ -13,3 +13,6 @@
 [submodule "third_party/ced/src"]
 	path = third_party/ced/src
 	url = git@github.com:jelmansouri/chromium-ced.git
+[submodule "crypto"]
+	path = crypto
+	url = git@github.com:jelmansouri/chromium-crypto.git

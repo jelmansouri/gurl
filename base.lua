@@ -160,7 +160,6 @@ gurlProject("base_unittest", "ConsoleApp")
     files {
         "base/**unittest.h",
         "base/**unittest.cc",
-        --"base/allocator/unittest_utils.cc",
         "base/test/run_all_unittests.cc",
     }
 
