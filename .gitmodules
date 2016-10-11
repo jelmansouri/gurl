@@ -16,3 +16,6 @@
 [submodule "crypto"]
 	path = crypto
 	url = git@github.com:jelmansouri/chromium-crypto.git
+[submodule "third_party/boringssl/src"]
+	path = third_party/boringssl/src
+	url = git@github.com:jelmansouri/chromium-boringssl.git

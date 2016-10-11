@@ -44,4 +44,4 @@ include "gtest.lua"
 include "gmock.lua"
 include "third_party.lua"
 include "base.lua"
-
+include "crypto.lua"
