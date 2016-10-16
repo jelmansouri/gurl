@@ -3,7 +3,7 @@ gurlProject("net", "StaticLib")
     useCryptoLib()
     useUrlLib()
     useProtobufLiteLib()
-    useSdhc()
+    useSdch()
 
     files {
         "net/**.h",
@@ -35,6 +35,7 @@ gurlProject("net", "StaticLib")
         "net/proxy/*mojo*",
         "net/tools/**",
         "net/extras/**",
+        "net/quic/core/crypto/common_cert_set_*.c",
     }
 
     defines {
@@ -44,7 +45,7 @@ gurlProject("net", "StaticLib")
     }
 
     filter {
-        "options:not use-nss-certs",
+        "options:not use-openssl-certs", 
         "files:net/base/crypto_module_openssl.cc or " .. 
         "files:net/base/keygen_handler_openssl.cc or " ..
         "files:net/base/openssl_private_key_store_memory.cc or " ..
@@ -57,13 +58,13 @@ gurlProject("net", "StaticLib")
         flags { "ExcludeFromBuild" }
     
     filter {
-        "options:not use-openssl-certs", 
+        "options:not use-nss-certs",
         "files:net/**nss_* or " ..
         "files:net/**_nss* or " ..
         "files:net/third_party/mozilla_security_manager/** or " ..
         "files:net/ssl/client_key_store.cc or " ..
         "files:net/ssl/ssl_platform_key_nss.cc or " ..
-        "files:third_party/nss/ssl/*"
+        "files:net/third_party/nss/ssl/*"
     }
         flags { "ExcludeFromBuild" }
 

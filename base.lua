@@ -257,3 +257,73 @@ gurlProject("base_perftest", "ConsoleApp")
         "winspool",
         "ws2_32",
     }
+
+
+-- this is a third_party lib but that uses base
+project "sdch"
+    kind "StaticLib"
+    location "output/third_party/sdch"
+    language "C++"
+    targetdir "output/bin/%{cfg.buildcfg}"
+    rtti "Off"
+    noExceptions()
+
+    useZlib()
+    useBaseLib()
+
+    includedirs {
+        "third_party/sdch/open-vcdiff/src"
+    }
+
+    files {
+        "third_party/sdch/logging_forward.h",
+        "third_party/sdch/open-vcdiff/src/addrcache.cc",
+        "third_party/sdch/open-vcdiff/src/blockhash.cc",
+        "third_party/sdch/open-vcdiff/src/blockhash.h",
+        "third_party/sdch/open-vcdiff/src/checksum.h",
+        "third_party/sdch/open-vcdiff/src/codetable.cc",
+        "third_party/sdch/open-vcdiff/src/codetable.h",
+        "third_party/sdch/open-vcdiff/src/compile_assert.h",
+        "third_party/sdch/open-vcdiff/src/decodetable.cc",
+        "third_party/sdch/open-vcdiff/src/decodetable.h",
+        "third_party/sdch/open-vcdiff/src/encodetable.cc",
+        "third_party/sdch/open-vcdiff/src/google/encodetable.h",
+        "third_party/sdch/open-vcdiff/src/google/jsonwriter.h",
+        "third_party/sdch/open-vcdiff/src/google/output_string.h",
+        "third_party/sdch/open-vcdiff/src/google/vcdecoder.h",
+        "third_party/sdch/open-vcdiff/src/google/vcencoder.h",
+        "third_party/sdch/open-vcdiff/src/headerparser.cc",
+        "third_party/sdch/open-vcdiff/src/headerparser.h",
+        "third_party/sdch/open-vcdiff/src/instruction_map.cc",
+        "third_party/sdch/open-vcdiff/src/instruction_map.h",
+        "third_party/sdch/open-vcdiff/src/jsonwriter.cc",
+        "third_party/sdch/open-vcdiff/src/rolling_hash.h",
+        "third_party/sdch/open-vcdiff/src/testing.h",
+        "third_party/sdch/open-vcdiff/src/varint_bigendian.cc",
+        "third_party/sdch/open-vcdiff/src/varint_bigendian.h",
+        "third_party/sdch/open-vcdiff/src/vcdecoder.cc",
+        "third_party/sdch/open-vcdiff/src/vcdiff_defs.h",
+        "third_party/sdch/open-vcdiff/src/vcdiffengine.cc",
+        "third_party/sdch/open-vcdiff/src/vcdiffengine.h",
+        "third_party/sdch/open-vcdiff/src/vcencoder.cc",
+    }
+
+    forceincludes  { "third_party/sdch/logging_forward.h" }
+
+    filter { "system:windows" }
+        includedirs { 
+            "third_party/sdch/win",
+        }
+    
+    function addSdchDefinesAndIncludes()
+        filter { }
+        includedirs { 
+            "third_party/sdch/open-vcdiff/src",
+        }
+    end
+
+    function useSdch()
+        addSdchDefinesAndIncludes()
+        filter {}
+        links "sdch"
+    end

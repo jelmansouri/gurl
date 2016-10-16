@@ -28,6 +28,8 @@ net/quic/core/proto/cached_network_parameters.pb.*
 net/quic/core/proto/source_address_token.pb*
 protoc --cpp_out="." source_address_token.proto cached_network_parameters.proto
 
+python make_dafsa.py effective_tld_names.gperf effective_tld_names-inc.cc
+
 added manually:
 protoc.exe
   from : https://github.com/google/protobuf/releases/download/v3.0.0/protoc-3.0.0-win32.zip
