@@ -23,3 +23,12 @@ base/generated_build_date.h
 base/trace_event/etw_manifest/chrome_events_win.h
 base/trace_event/etw_manifest/chrome_events_win.rc
 mc -h path_to_gurl\gurl\base\trace_event\etw_manifest -r path_to_gurl\gurl\base\trace_event\etw_manifest\. -um path_to_gurl\git\gurl\base\trace_event\etw_manifest\chrome_events_win.man
+
+net/quic/core/proto/cached_network_parameters.pb.*
+net/quic/core/proto/source_address_token.pb*
+protoc --cpp_out="." source_address_token.proto cached_network_parameters.proto
+
+added manually:
+protoc.exe
+  from : https://github.com/google/protobuf/releases/download/v3.0.0/protoc-3.0.0-win32.zip
+  to : third_party\protobuf\bin\

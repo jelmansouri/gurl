@@ -1,7 +1,5 @@
 gurlProject("url", "StaticLib")
-    
     useBaseLib()
-    useBoringSSL()
 
     files {
         "url/**.h",

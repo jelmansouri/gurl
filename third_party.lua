@@ -342,3 +342,201 @@ project "boringssl"
         filter {}
         links "boringssl"
     end
+
+
+project "protobuf_lite"
+    kind "StaticLib"
+    location "output/third_party/protobuf_lite"
+    language "C++"
+    targetdir "output/bin/%{cfg.buildcfg}"
+    rtti "Off"
+    noExceptions()
+
+    files {
+        "third_party/protobuf/src/google/protobuf/arena.*",
+        "third_party/protobuf/src/google/protobuf/arenastring.cc",
+        "third_party/protobuf/src/google/protobuf/extension_set.*",
+        "third_party/protobuf/src/google/protobuf/generated_message_util.*",
+        "third_party/protobuf/src/google/protobuf/io/coded_stream.*",
+        "third_party/protobuf/src/google/protobuf/io/coded_stream_inl.h",
+        "third_party/protobuf/src/google/protobuf/io/zero_copy_stream*",
+        "third_party/protobuf/src/google/protobuf/map.h",
+        "third_party/protobuf/src/google/protobuf/map_entry_lite.h",
+        "third_party/protobuf/src/google/protobuf/map_field_lite.h",
+        "third_party/protobuf/src/google/protobuf/map_type_handler.h",
+        "third_party/protobuf/src/google/protobuf/message_lite.*",
+        "third_party/protobuf/src/google/protobuf/repeated_field.*",
+        "third_party/protobuf/src/google/protobuf/stubs/atomicops*",
+        "third_party/protobuf/src/google/protobuf/stubs/atomic_sequence_num.h",
+        "third_party/protobuf/src/google/protobuf/stubs/bytestream.*",
+        "third_party/protobuf/src/google/protobuf/stubs/callback.h",
+        "third_party/protobuf/src/google/protobuf/stubs/casts.h",
+        "third_party/protobuf/src/google/protobuf/stubs/common.*",
+        "third_party/protobuf/src/google/protobuf/stubs/fastmem.h",
+        "third_party/protobuf/src/google/protobuf/stubs/hash.h",
+        "third_party/protobuf/src/google/protobuf/stubs/int128.*",
+        "third_party/protobuf/src/google/protobuf/stubs/logging.h",
+        "third_party/protobuf/src/google/protobuf/stubs/macros.h",
+        "third_party/protobuf/src/google/protobuf/stubs/map_util.h",
+        "third_party/protobuf/src/google/protobuf/stubs/mutex.h",
+        "third_party/protobuf/src/google/protobuf/stubs/once.*",
+        "third_party/protobuf/src/google/protobuf/stubs/platform_macros.h",
+        "third_party/protobuf/src/google/protobuf/stubs/port.h",
+        "third_party/protobuf/src/google/protobuf/stubs/scoped_ptr.h",
+        "third_party/protobuf/src/google/protobuf/stubs/shared_ptr.h",
+        "third_party/protobuf/src/google/protobuf/stubs/status.*",
+        "third_party/protobuf/src/google/protobuf/stubs/status_macros.h",
+        "third_party/protobuf/src/google/protobuf/stubs/statusor.*",
+        "third_party/protobuf/src/google/protobuf/stubs/stl_util.h",
+        "third_party/protobuf/src/google/protobuf/stubs/stringpiece.*",
+        "third_party/protobuf/src/google/protobuf/stubs/stringprintf.*",
+        "third_party/protobuf/src/google/protobuf/stubs/structurally_valid.cc",
+        "third_party/protobuf/src/google/protobuf/stubs/strutil.*",
+        "third_party/protobuf/src/google/protobuf/stubs/template_util.h",
+        "third_party/protobuf/src/google/protobuf/stubs/type_traits.h",
+        "third_party/protobuf/src/google/protobuf/stubs/time.*",
+        "third_party/protobuf/src/google/protobuf/wire_format_lite*",
+    }
+
+    excludes {
+        "third_party/protobuf/src/**unittest.*",
+    }
+    
+    filter { "system:windows" }
+        disablewarnings {
+            "4018",  -- signed/unsigned mismatch in comparison
+            "4065",  -- switch statement contains 'default' but no 'case' labels
+            "4146",  -- unary minus operator applied to unsigned type
+            "4244",  -- implicit conversion, possible loss of data
+            "4267",  -- size_t to int truncation
+            "4291",  -- no matching operator delete for a placement new.
+            "4305",  -- double to float truncation
+            "4355",  -- 'this' used in base member initializer list
+            "4506",  -- no definition for inline function (protobuf issue #240)
+            "4715",  -- not all control paths return a value (fixed in trunk)
+        }
+        defines {
+            "NOMINMAX",
+            "_CRT_SECURE_NO_WARNINGS",
+        }
+
+    function addProtobufLiteDefinesAndIncludes()
+        filter { }
+        defines {
+            "GOOGLE_PROTOBUF_NO_RTTI",
+            "GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER",
+        }
+        filter { "system:not windows" }
+            defines { "HAVE_PTHREAD" }
+
+        filter { }
+
+        includedirs { 
+            "third_party/protobuf/src",
+        }
+    end
+
+    addProtobufLiteDefinesAndIncludes()
+
+    function useProtobufLiteLib()
+        addProtobufLiteDefinesAndIncludes()
+        filter {}
+        links "protobuf_lite"
+    end
+
+project "brotli"
+    kind "StaticLib"
+    location "output/third_party/brotli"
+    language "C++"
+    targetdir "output/bin/%{cfg.buildcfg}"
+    rtti "Off"
+    noExceptions()
+
+    includedirs {
+        "third_party/brotli/dec"
+    }
+
+    files {
+        "third_party/brotli/dec/*.h", 
+        "third_party/brotli/dec/*.c",
+    }
+
+    function addBrotliDefinesAndIncludes()
+        filter { }
+        includedirs { 
+            "third_party/brotli/dec",
+        }
+    end
+
+    function useBrotli()
+        addBrotliDefinesAndIncludes()
+        filter {}
+        links "brotli"
+    end
+
+project "sdhc"
+    kind "StaticLib"
+    location "output/third_party/sdhc"
+    language "C++"
+    targetdir "output/bin/%{cfg.buildcfg}"
+    rtti "Off"
+    noExceptions()
+
+    useZlib()
+
+    includedirs {
+        "third_party/sdhc/open-vcdiff/src"
+    }
+
+    files {
+        "third_party/sdhc/logging_forward.h",
+        "third_party/sdhc/open-vcdiff/src/addrcache.cc",
+        "third_party/sdhc/open-vcdiff/src/blockhash.cc",
+        "third_party/sdhc/open-vcdiff/src/blockhash.h",
+        "third_party/sdhc/open-vcdiff/src/checksum.h",
+        "third_party/sdhc/open-vcdiff/src/codetable.cc",
+        "third_party/sdhc/open-vcdiff/src/codetable.h",
+        "third_party/sdhc/open-vcdiff/src/compile_assert.h",
+        "third_party/sdhc/open-vcdiff/src/decodetable.cc",
+        "third_party/sdhc/open-vcdiff/src/decodetable.h",
+        "third_party/sdhc/open-vcdiff/src/encodetable.cc",
+        "third_party/sdhc/open-vcdiff/src/google/encodetable.h",
+        "third_party/sdhc/open-vcdiff/src/google/jsonwriter.h",
+        "third_party/sdhc/open-vcdiff/src/google/output_string.h",
+        "third_party/sdhc/open-vcdiff/src/google/vcdecoder.h",
+        "third_party/sdhc/open-vcdiff/src/google/vcencoder.h",
+        "third_party/sdhc/open-vcdiff/src/headerparser.cc",
+        "third_party/sdhc/open-vcdiff/src/headerparser.h",
+        "third_party/sdhc/open-vcdiff/src/instruction_map.cc",
+        "third_party/sdhc/open-vcdiff/src/instruction_map.h",
+        "third_party/sdhc/open-vcdiff/src/jsonwriter.cc",
+        "third_party/sdhc/open-vcdiff/src/rolling_hash.h",
+        "third_party/sdhc/open-vcdiff/src/testing.h",
+        "third_party/sdhc/open-vcdiff/src/varint_bigendian.cc",
+        "third_party/sdhc/open-vcdiff/src/varint_bigendian.h",
+        "third_party/sdhc/open-vcdiff/src/vcdecoder.cc",
+        "third_party/sdhc/open-vcdiff/src/vcdiff_defs.h",
+        "third_party/sdhc/open-vcdiff/src/vcdiffengine.cc",
+        "third_party/sdhc/open-vcdiff/src/vcdiffengine.h",
+        "third_party/sdhc/open-vcdiff/src/vcencoder.cc",
+    }
+
+    forceincludes  { "third_party/sdhc/logging_forward.h" }
+
+    filter { "system:windows" }
+        includedirs { 
+            "third_party/sdhc/win",
+        }
+    
+    function addSdhcDefinesAndIncludes()
+        filter { }
+        includedirs { 
+            "third_party/sdhc/open-vcdiff/src",
+        }
+    end
+
+    function useSdhc()
+        addSdhcDefinesAndIncludes()
+        filter {}
+        links "sdhc"
+    end
