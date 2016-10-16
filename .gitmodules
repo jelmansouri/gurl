@@ -19,3 +19,6 @@
 [submodule "third_party/boringssl/src"]
 	path = third_party/boringssl/src
 	url = git@github.com:jelmansouri/chromium-boringssl.git
+[submodule "third_party/yasm/binaries"]
+	path = third_party/yasm/binaries
+	url = git@github.com:jelmansouri/chromium-yasm-binaries.git

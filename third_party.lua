@@ -284,3 +284,61 @@ project "libxml"
         filter {}
         links "libxml"
     end
+
+project "boringssl"
+    kind "StaticLib"
+    location "output/third_party/boringssl"
+    language "C++"
+    targetdir "output/bin/%{cfg.buildcfg}"
+    rtti "Off"
+    noExceptions()
+
+    files {
+        "third_party/boringssl/err_data.c",
+        "third_party/boringssl/src/**.h",
+        "third_party/boringssl/src/crypto/**.c", 
+        "third_party/boringssl/src/ssl/**.c",
+        "third_party/boringssl/win-x86_64/crypto/**.asm",
+    }
+
+    excludes {
+        "third_party/boringssl/test/**",
+        "third_party/boringssl/**_test.*"
+    }
+
+    defines {
+        "BORINGSSL_IMPLEMENTATION",
+        "BORINGSSL_NO_STATIC_INITIALIZER",
+        "OPENSSL_SMALL",
+    }
+
+    filter { "files:**.asm", "system:windows" }
+        buildmessage "%{file.name}"
+        buildcommands "..\\..\\..\\third_party\\yasm\\binaries\\win\\yasm.exe -fwin64 -m amd64 %{file.relpath} -o %{cfg.objdir}/%{file.basename}.obj"
+        buildoutputs "%{cfg.objdir}/%{file.basename}.obj"
+
+    
+    filter { "system:windows" }
+        disablewarnings {
+            "4267", -- conversion from 'size_t' to 'int32_t', possible loss of data
+        }
+        defines {
+            "NOMINMAX",
+            "WIN32_LEAN_AND_MEAN",
+            "_CRT_SECURE_NO_WARNINGS",
+        }
+
+    function addBoringSSLDefinesAndIncludes()
+        filter { }
+        includedirs { 
+            "third_party/boringssl/src/include",
+        }
+    end
+
+    addBoringSSLDefinesAndIncludes()
+
+    function useBoringSSL()
+        addBoringSSLDefinesAndIncludes()
+        filter {}
+        links "boringssl"
+    end

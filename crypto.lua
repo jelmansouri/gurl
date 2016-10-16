@@ -1,6 +1,7 @@
 gurlProject("crypto", "StaticLib")
     
     useBaseLib()
+    useBoringSSL()
 
     files {
         "crypto/**.h",
@@ -13,6 +14,8 @@ gurlProject("crypto", "StaticLib")
     excludes {  
         "crypto/**unittest.*",
         "crypto/**perftest.*",
+        "crypto/scoped_test_system_nss_key_slot.cc",
+        "crypto/scoped_test_nss_db.cc",
     }
 
     defines {
@@ -48,19 +51,62 @@ gurlProject("crypto", "StaticLib")
 
     excludeSysFilesFromBuild()
 
+    function useCryptoLib()
+        addBoringSSLDefinesAndIncludes()
+        useBaseLib()
+        -- We link against a library that's in the same workspace, so we can just
+        -- use the project name - premake is really smart and will handle everything for us.
+        links "crypto"
+    end
+
 gurlProject("cypto_unittest", "ConsoleApp")
-    
+    useGTestLib()
+    useGmockLib()
     useBaseLib()
+    useBaseTestLib()
+    useCryptoLib()
 
     files {
         "crypto/**unittest.h",
         "crypto/**unittest.cc",
+        "base/test/run_all_unittests.cc"
     }
 
     filter {
         "options:not use-nss-certs",
-        "files:crypto/scoped_test_nss_db.cc"
+        "files:crypto/scoped_test_nss_db.cc or " ..
+        "files:crypto/nss_util_unittest.cc or " ..
+        "files:crypto/nss_key_util_unittest.cc" 
     }
         flags { "ExcludeFromBuild" }
 
     excludeSysFilesFromBuild()
+
+    links {
+        "cfgmgr32",
+        "powrprof",
+        "setupapi",
+        "userenv",
+        "winmm",
+        "advapi32",
+        "comdlg32",
+        "dbghelp",
+        "delayimp",
+        "dnsapi",
+        "gdi32",
+        "kernel32",
+        "msimg32",
+        "ole32",
+        "oleaut32",
+        "psapi",
+        "shell32",
+        "shlwapi",
+        "user32",
+        "usp10",
+        "uuid",
+        "version",
+        "wininet",
+        "winmm",
+        "winspool",
+        "ws2_32",
+    }
