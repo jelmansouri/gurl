@@ -22,3 +22,6 @@
 [submodule "third_party/yasm/binaries"]
 	path = third_party/yasm/binaries
 	url = git@github.com:jelmansouri/chromium-yasm-binaries.git
+[submodule "net"]
+	path = net
+	url = git@github.com:jelmansouri/chromium-net.git
