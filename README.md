@@ -34,3 +34,6 @@ added manually:
 protoc.exe
   from : https://github.com/google/protobuf/releases/download/v3.0.0/protoc-3.0.0-win32.zip
   to : third_party\protobuf\bin\
+
+for net file:// compatibility ...
+python grit.py -i net_resources.grd build -o "." --write-only-new=1 --depend-on-stamp -t win32

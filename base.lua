@@ -9,7 +9,8 @@ gurlProject("base", "StaticLib")
         "base/**.cc",
         "base/**.cpp",
         "base/**.c",
-        "base/**.mm"
+        "base/**.mm",
+        "base/trace_event/etw_manifest/chrome_events_win.rc"
     }
     
     excludes { 

@@ -21,7 +21,7 @@ gurlProject("net", "StaticLib")
         "net/**mock_*",
         "net/**_mock*",
         "net/test/**",
-        "net/**_fuzzer*",
+        "net/**fuzzer*",
         "net/**fuzzed*",
         "net/**fuzzing**",
         "net/spdy/spdy_deframer_visitor.*",
@@ -130,6 +130,76 @@ gurlProject("net", "StaticLib")
         links "net"
     end
 
+gurlProject("net_test", "StaticLib")
+    useGTestLib()
+    useGmockLib()
+    useNetLib()
+    useProtobufLiteLib()
+
+    files {
+        "net/**test_*.h",
+        "net/**test_*.cc",
+        "net/**mock_*.h",
+        "net/**mock_*.cc",
+        "net/**_mock*.h",
+        "net/**_mock*.cc",
+        "net/test/**.h",
+        "net/test/**.cc",
+        "net/cookies/**_test.h",
+        "net/cookies/**_test.cc",
+    }
+
+    excludes {
+        "net/**unittest.*",
+        "net/**perftest.*",
+        "net/server/**",
+        "net/proxy/*_v8*",
+        "net/dns/*mojo*",
+        "net/proxy/*mojo*",
+        "net/tools/**",
+        "net/extras/**",
+        "net/test/embedded_test_server/**",
+        "net/**fuzzer*",
+        "net/**fuzzed*",
+        "net/**fuzzing**",
+        "net/test/run_all_unittests.cc",
+    }
+
+    filter {
+        "options:not use-openssl-certs",
+        "files:net/cert/test_root_certs_openssl.cc or " .. 
+        "files:net/test/cert_test_util_nss.cc"
+    }
+        flags { "ExcludeFromBuild" }
+    
+    filter {
+        "options:not use-nss-certs",
+        "files:net/cert/test_root_certs_nss.cc"
+    }
+        flags { "ExcludeFromBuild" }
+
+    filter {
+        "options:not android",
+        "files:net/test/spawned_test_server/remote_test_server.cc or " ..
+        "files:net/test/spawned_test_server/spawner_communicator.cc"
+    }
+        flags { "ExcludeFromBuild" }
+
+    excludeSysFilesFromBuild()
+
+    function useNetTestLib()
+        useGTestLib()
+        useGmockLib()
+        useBaseLib()
+        useCryptoLib()
+        useNetLib()
+        useProtobufLiteLib()
+        -- We link against a library that's in the same workspace, so we can just
+        -- use the project name - premake is really smart and will handle everything for us.
+        links "net_test"
+    end
+
+
 gurlProject("net_extras", "StaticLib")
     useNetLib()
 
@@ -138,7 +208,6 @@ gurlProject("net_extras", "StaticLib")
         "net/extras/**.cc",
     }
     excludeSysFilesFromBuild()
-
 
 gurlProject("net_http_server", "StaticLib")
     useNetLib()
@@ -150,16 +219,55 @@ gurlProject("net_http_server", "StaticLib")
     excludeSysFilesFromBuild()
 
 gurlProject("net_unittest", "ConsoleApp")
-    useGTestLib()
-    useGmockLib()
-    useBaseTestLib()
-    useNetLib()
+    useNetTestLib()
+    useUrlLib()
 
     files {
         "net/**unittest.h",
         "net/**unittest.cc",
-        "base/test/run_all_unittests.cc"
+        "net/**_test.h",
+        "net/**_test.cc",
+        "net/test/run_all_unittests.cc"
     }
+
+    excludes {
+        "net/cookies/**_test.h",
+        "net/cookies/**_test.cc",
+        "net/proxy/*_v8*",
+        "net/dns/*mojo*",
+        "net/proxy/*mojo*",
+        "net/tools/**",
+        "net/extras/**",
+        "net/test/embedded_test_server/**",
+        "net/**fuzzer*",
+        "net/**fuzzed*",
+        "net/**fuzzing**",
+        "net/quic/core/quic_client_promised_info_test.cc",
+    }
+
+    filter {
+        "options:not use-openssl-certs",
+        "files:net/ssl/openssl_client_key_store_unittest.cc",
+    }
+        flags { "ExcludeFromBuild" }
+    
+    filter {
+        "options:not use-nss-certs",
+        "files:net/**nss_* or " ..
+        "files:net/**_nss* or " ..
+        "files:net/third_party/mozilla_security_manager/** or " ..
+        "files:net/third_party/nss/ssl/*"
+    }
+        flags { "ExcludeFromBuild" }
+
+    filter {
+        "system:not enable-net-file-support",
+        "files:net/base/directory_lister_unittest.cc or " ..
+        "files:net/base/directory_listing_unittest.cc or " ..
+        "files:net/url_request/url_request_file_dir_job_unittest.cc or " ..
+        "files:net/url_request/url_request_file_job_unittest.cc",
+    }
+        flags { "ExcludeFromBuild" }
 
     excludeSysFilesFromBuild()
 
