@@ -28,7 +28,17 @@ net/quic/core/proto/cached_network_parameters.pb.*
 net/quic/core/proto/source_address_token.pb*
 protoc --cpp_out="." source_address_token.proto cached_network_parameters.proto
 
+net/base/registry_controlled_domains/effective_tld_names-inc.cc
 python make_dafsa.py effective_tld_names.gperf effective_tld_names-inc.cc
+using the same command line:
+net/base/registry_controlled_domains/effective_tld_names_unittest1-inc.cc
+net/base/registry_controlled_domains/effective_tld_names_unittest2-inc.cc
+net/base/registry_controlled_domains/effective_tld_names_unittest3-inc.cc
+net/base/registry_controlled_domains/effective_tld_names_unittest4-inc.cc
+net/base/registry_controlled_domains/effective_tld_names_unittest5-inc.cc
+net/base/registry_controlled_domains/effective_tld_names_unittest6-inc.cc
+net/base/stale_while_revalidate_experiment_domains-inc.cc
+
 
 added manually:
 protoc.exe
