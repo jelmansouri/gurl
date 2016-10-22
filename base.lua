@@ -63,36 +63,6 @@ gurlProject("base", "StaticLib")
         "files:base/files/file_path_watcher_fsevents.cc or files:base/files/file_path_watcher_kqueue.cc"
     } 
         flags { "ExcludeFromBuild" }
-    
-    filter { "system:windows" }
-        links {
-            "cfgmgr32",
-            "powrprof",
-            "setupapi",
-            "userenv",
-            "winmm",
-            "advapi32",
-            "comdlg32",
-            "dbghelp",
-            "delayimp",
-            "dnsapi",
-            "gdi32",
-            "kernel32",
-            "msimg32",
-            "ole32",
-            "oleaut32",
-            "psapi",
-            "shell32",
-            "shlwapi",
-            "user32",
-            "usp10",
-            "uuid",
-            "version",
-            "wininet",
-            "winmm",
-            "winspool",
-            "ws2_32",
-        }
 
     function addBaseDefinesAndIncludes()
         addIcuDefinesAndIncludes()
