@@ -358,39 +358,5 @@ gurlProject("net_unittest", "ConsoleApp")
 
     excludeSysFilesFromBuild()
 
-    links {
-        "cfgmgr32",
-        "powrprof",
-        "setupapi",
-        "userenv",
-        "winmm",
-        "advapi32",
-        "comdlg32",
-        "dbghelp",
-        "delayimp",
-        "dnsapi",
-        "gdi32",
-        "kernel32",
-        "msimg32",
-        "ole32",
-        "oleaut32",
-        "psapi",
-        "shell32",
-        "shlwapi",
-        "user32",
-        "usp10",
-        "uuid",
-        "version",
-        "wininet",
-        "winmm",
-        "winspool",
-        "ws2_32",
-        "crypt32",
-        "dhcpcsvc",
-        "iphlpapi",
-        "ncrypt",
-        "rpcrt4",
-        "secur32",
-        "urlmon",
-        "winhttp",
-    }
+    linkSystemLibs()
+    linkSystemNetLibs()

@@ -187,34 +187,7 @@ gurlProject("base_unittest", "ConsoleApp")
 
     excludeSysFilesFromBuild()
 
-    links {
-        "cfgmgr32",
-        "powrprof",
-        "setupapi",
-        "userenv",
-        "winmm",
-        "advapi32",
-        "comdlg32",
-        "dbghelp",
-        "delayimp",
-        "dnsapi",
-        "gdi32",
-        "kernel32",
-        "msimg32",
-        "ole32",
-        "oleaut32",
-        "psapi",
-        "shell32",
-        "shlwapi",
-        "user32",
-        "usp10",
-        "uuid",
-        "version",
-        "wininet",
-        "winmm",
-        "winspool",
-        "ws2_32",
-    }
+    linkSystemLibs()
 
 gurlProject("base_perftest", "ConsoleApp")
     useGTestLib()
@@ -230,34 +203,7 @@ gurlProject("base_perftest", "ConsoleApp")
 
     excludeSysFilesFromBuild()
 
-    links {
-        "cfgmgr32",
-        "powrprof",
-        "setupapi",
-        "userenv",
-        "winmm",
-        "advapi32",
-        "comdlg32",
-        "dbghelp",
-        "delayimp",
-        "dnsapi",
-        "gdi32",
-        "kernel32",
-        "msimg32",
-        "ole32",
-        "oleaut32",
-        "psapi",
-        "shell32",
-        "shlwapi",
-        "user32",
-        "usp10",
-        "uuid",
-        "version",
-        "wininet",
-        "winmm",
-        "winspool",
-        "ws2_32",
-    }
+    linkSystemLibs()
 
 
 -- this is a third_party lib but that uses base

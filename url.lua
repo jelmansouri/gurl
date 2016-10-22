@@ -50,31 +50,4 @@ gurlProject("url_unittest", "ConsoleApp")
 
     excludeSysFilesFromBuild()
 
-    links {
-        "cfgmgr32",
-        "powrprof",
-        "setupapi",
-        "userenv",
-        "winmm",
-        "advapi32",
-        "comdlg32",
-        "dbghelp",
-        "delayimp",
-        "dnsapi",
-        "gdi32",
-        "kernel32",
-        "msimg32",
-        "ole32",
-        "oleaut32",
-        "psapi",
-        "shell32",
-        "shlwapi",
-        "user32",
-        "usp10",
-        "uuid",
-        "version",
-        "wininet",
-        "winmm",
-        "winspool",
-        "ws2_32",
-    }
+    linkSystemLibs()
