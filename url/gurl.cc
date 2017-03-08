@@ -12,6 +12,7 @@
 #include "base/logging.h"
 #include "base/strings/string_piece.h"
 #include "base/strings/string_util.h"
+#include "base/trace_event/memory_usage_estimator.h"
 #include "url/url_canon_stdstring.h"
 #include "url/url_util.h"
 
@@ -108,9 +109,6 @@ GURL::GURL(std::string canonical_spec, const url::Parsed& parsed, bool is_valid)
 template<typename STR>
 void GURL::InitCanonical(base::BasicStringPiece<STR> input_spec,
                          bool trim_path_end) {
-  // Reserve enough room in the output for the input, plus some extra so that
-  // we have room if we have to escape a few things without reallocating.
-  spec_.reserve(input_spec.size() + 32);
   url::StdStringCanonOutput output(&spec_);
   is_valid_ = url::Canonicalize(
       input_spec.data(), static_cast<int>(input_spec.length()), trim_path_end,
@@ -121,6 +119,8 @@ void GURL::InitCanonical(base::BasicStringPiece<STR> input_spec,
     inner_url_.reset(new GURL(spec_.data(), parsed_.Length(),
                               *parsed_.inner_parsed(), true));
   }
+  // Valid URLs always have non-empty specs.
+  DCHECK(!is_valid_ || !spec_.empty());
 }
 
 void GURL::InitializeFromCanonicalSpec() {
@@ -135,6 +135,7 @@ void GURL::InitializeFromCanonicalSpec() {
   // what we would have produced. Skip checking for invalid URLs have no meaning
   // and we can't always canonicalize then reproducibly.
   if (is_valid_) {
+    DCHECK(!spec_.empty());
     url::Component scheme;
     // We can't do this check on the inner_url of a filesystem URL, as
     // canonical_spec actually points to the start of the outer URL, so we'd
@@ -180,14 +181,6 @@ const std::string& GURL::spec() const {
   return EmptyStringForGURL();
 }
 
-bool GURL::operator==(const GURL& other) const {
-  return spec_ == other.spec_;
-}
-
-bool GURL::operator!=(const GURL& other) const {
-  return spec_ != other.spec_;
-}
-
 bool GURL::operator<(const GURL& other) const {
   return spec_ < other.spec_;
 }
@@ -203,12 +196,7 @@ GURL GURL::Resolve(const std::string& relative) const {
     return GURL();
 
   GURL result;
-
-  // Reserve enough room in the output for the input, plus some extra so that
-  // we have room if we have to escape a few things without reallocating.
-  result.spec_.reserve(spec_.size() + 32);
   url::StdStringCanonOutput output(&result.spec_);
-
   if (!url::ResolveRelative(spec_.data(), static_cast<int>(spec_.length()),
                             parsed_, relative.data(),
                             static_cast<int>(relative.length()),
@@ -234,12 +222,7 @@ GURL GURL::Resolve(const base::string16& relative) const {
     return GURL();
 
   GURL result;
-
-  // Reserve enough room in the output for the input, plus some extra so that
-  // we have room if we have to escape a few things without reallocating.
-  result.spec_.reserve(spec_.size() + 32);
   url::StdStringCanonOutput output(&result.spec_);
-
   if (!url::ResolveRelative(spec_.data(), static_cast<int>(spec_.length()),
                             parsed_, relative.data(),
                             static_cast<int>(relative.length()),
@@ -267,11 +250,7 @@ GURL GURL::ReplaceComponents(
   if (!is_valid_)
     return GURL();
 
-  // Reserve enough room in the output for the input, plus some extra so that
-  // we have room if we have to escape a few things without reallocating.
-  result.spec_.reserve(spec_.size() + 32);
   url::StdStringCanonOutput output(&result.spec_);
-
   result.is_valid_ = url::ReplaceComponents(
       spec_.data(), static_cast<int>(spec_.length()), parsed_, replacements,
       NULL, &output, &result.parsed_);
@@ -294,11 +273,7 @@ GURL GURL::ReplaceComponents(
   if (!is_valid_)
     return GURL();
 
-  // Reserve enough room in the output for the input, plus some extra so that
-  // we have room if we have to escape a few things without reallocating.
-  result.spec_.reserve(spec_.size() + 32);
   url::StdStringCanonOutput output(&result.spec_);
-
   result.is_valid_ = url::ReplaceComponents(
       spec_.data(), static_cast<int>(spec_.length()), parsed_, replacements,
       NULL, &output, &result.parsed_);
@@ -371,6 +346,19 @@ GURL GURL::GetWithEmptyPath() const {
 
 bool GURL::IsStandard() const {
   return url::IsStandard(spec_.data(), parsed_.scheme);
+}
+
+bool GURL::IsAboutBlank() const {
+  if (!SchemeIs(url::kAboutScheme))
+    return false;
+
+  if (has_host() || has_username() || has_password() || has_port())
+    return false;
+
+  if (path() != url::kAboutBlankPath && path() != url::kAboutBlankWithHashPath)
+    return false;
+
+  return true;
 }
 
 bool GURL::SchemeIs(base::StringPiece lower_ascii_scheme) const {
@@ -448,14 +436,7 @@ std::string GURL::GetContent() const {
 }
 
 bool GURL::HostIsIPAddress() const {
-  if (!is_valid_ || spec_.empty())
-     return false;
-
-  url::RawCanonOutputT<char, 128> ignored_output;
-  url::CanonHostInfo host_info;
-  url::CanonicalizeIPAddress(spec_.c_str(), parsed_.host, &ignored_output,
-                             &host_info);
-  return host_info.IsIPAddress();
+  return is_valid_ && url::HostIsIPAddress(host_piece());
 }
 
 #ifdef WIN32
@@ -500,6 +481,14 @@ bool GURL::DomainIs(base::StringPiece lower_ascii_domain) const {
   return url::DomainIs(host_piece(), lower_ascii_domain);
 }
 
+bool GURL::EqualsIgnoringRef(const GURL& other) const {
+  int ref_position = parsed_.CountCharactersBefore(url::Parsed::REF, true);
+  int ref_position_other =
+      other.parsed_.CountCharactersBefore(url::Parsed::REF, true);
+  return base::StringPiece(spec_).substr(0, ref_position) ==
+         base::StringPiece(other.spec_).substr(0, ref_position_other);
+}
+
 void GURL::Swap(GURL* other) {
   spec_.swap(other->spec_);
   std::swap(is_valid_, other->is_valid_);
@@ -507,6 +496,29 @@ void GURL::Swap(GURL* other) {
   inner_url_.swap(other->inner_url_);
 }
 
+size_t GURL::EstimateMemoryUsage() const {
+  return base::trace_event::EstimateMemoryUsage(spec_) +
+         base::trace_event::EstimateMemoryUsage(inner_url_) +
+         (parsed_.inner_parsed() ? sizeof(url::Parsed) : 0);
+}
+
 std::ostream& operator<<(std::ostream& out, const GURL& url) {
   return out << url.possibly_invalid_spec();
+}
+
+bool operator==(const GURL& x, const GURL& y) {
+  return x.possibly_invalid_spec() == y.possibly_invalid_spec();
+}
+
+bool operator!=(const GURL& x, const GURL& y) {
+  return !(x == y);
+}
+
+bool operator==(const GURL& x, const base::StringPiece& spec) {
+  DCHECK_EQ(GURL(spec).possibly_invalid_spec(), spec);
+  return x.possibly_invalid_spec() == spec;
+}
+
+bool operator!=(const GURL& x, const base::StringPiece& spec) {
+  return !(x == spec);
 }
