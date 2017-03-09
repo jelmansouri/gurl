@@ -16,13 +16,18 @@ put ICU as an optional dependency
 
 ### Manual changes
 generated manually :
-base/win/base_features.h 
-base/allocator/features.h
-base/debug/debugging_flag.h
-base/generated_build_date.h
-base/trace_event/etw_manifest/chrome_events_win.h
-base/trace_event/etw_manifest/chrome_events_win.rc
+- base/win/base_features.h 
+- base/allocator/features.h
+- base/debug/debugging_flag.h
+- base/generated_build_date.h
+- base/trace_event/etw_manifest/chrome_events_win.h
+- base/trace_event/etw_manifest/chrome_events_win.rc
+- base/win/eventlog_messages.h
+- base/win/eventlog_messages.rc
+
 mc -h path_to_gurl\gurl\base\trace_event\etw_manifest -r path_to_gurl\gurl\base\trace_event\etw_manifest\. -um path_to_gurl\git\gurl\base\trace_event\etw_manifest\chrome_events_win.man
+
+mc eventlog_messages.mc -h . -r .
 
 net/quic/core/proto/cached_network_parameters.pb.*
 net/quic/core/proto/source_address_token.pb*

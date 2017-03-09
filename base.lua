@@ -11,6 +11,7 @@ gurlProject("base", "StaticLib")
         "base/**.c",
         "base/**.mm",
         "base/trace_event/etw_manifest/chrome_events_win.rc"
+        -- "base/win/eventlog_messages.rc" needs to be its own project
     }
     
     excludes { 
@@ -48,7 +49,9 @@ gurlProject("base", "StaticLib")
         "files:base/files/file_path_watcher_stub.cc or " ..
         "files:base/third_party/libevent/** or " ..
         "files:base/third_party/symbolize/** or " ..
-        "files:base/third_party/xdg_mime/**"
+        "files:base/third_party/xdg_mime/** or " ..
+        "files:base/memory/shared_memory_helper.cc or " ..
+        "files:base/file_descriptor_store.cc"
     } 
         flags { "ExcludeFromBuild" }
 

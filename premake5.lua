@@ -22,7 +22,7 @@ workspace "gurl"
     -- We now only set settings for the Debug configuration
     filter { "configurations:Debug" }
         -- We want debug symbols in our debug config
-        flags { "Symbols" }
+        symbols "On"
         defines { 
             "DEBUG",
             "_DEBUG"
@@ -32,6 +32,7 @@ workspace "gurl"
     filter { "configurations:Release" }
         -- Release should be optimized
         optimize "On"
+        symbols "On"
         defines { 
             "NDEBUG",
         }
